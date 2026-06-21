@@ -4,6 +4,8 @@ services:
   @PROJECT@:
     image: ${IMAGE}
     container_name: ${CONTAINER_NAME}
+    env_file:
+      - ${ENV_FILE}
     ports:
       - "${HOST_PORT}:${CONTAINER_PORT}"
     networks:

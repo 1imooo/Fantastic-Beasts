@@ -5,10 +5,16 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh" "${1:?staging required}"
 branch_gate
 
-export IMAGE CONTAINER_NAME HOST_PORT CONTAINER_PORT VAULT_READ_TOKEN PROJECT_NAME
+export IMAGE CONTAINER_NAME HOST_PORT CONTAINER_PORT VAULT_READ_TOKEN PROJECT_NAME ENV_FILE
 
 COMPOSE_FILE="release/.compose.generated.yml"
 sed "s/@PROJECT@/${PROJECT_NAME}/g" "$RELEASE_FILE" > "$COMPOSE_FILE"
+
+if [[ "$STAGING" == "live" && -n "${VAULT_READ_TOKEN:-}" ]]; then
+  # shellcheck source=../../cmd/lib/vault.sh
+  source "${ROOT}/cmd/lib/vault.sh"
+  vault_materialize "$VAULT_PROJECT" "$ENV_FILE"
+fi
 
 # Compose project used to default to the checkout directory (e.g. session-provider).
 # After switching to -p "$CONTAINER_NAME", stale containers from the legacy project

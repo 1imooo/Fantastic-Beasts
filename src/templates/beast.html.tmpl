@@ -26,6 +26,7 @@
     <title>{{ .Beast.Name }} | Fantastic Beasts</title>
     <link rel="canonical" href="{{ .BaseURL }}/beasts/{{ .Beast.Slug }}">
 
+    {{ template "gtag" . }}
     {{ template "layout-styles" . }}
     <style>
         h2 {

@@ -18,6 +18,7 @@ import (
 const baseURL = "https://fantasticbeastsandwheretofindthem.xyz"
 
 var slugRe = regexp.MustCompile(`[^a-z0-9]+`)
+var gtagIDRe = regexp.MustCompile(`^G-[A-Z0-9]+$`)
 
 type Beast struct {
 	Name           string
@@ -34,6 +35,7 @@ type PageData struct {
 	Search        string
 	SearchParam   string
 	Sort          string
+	GtagID        string
 }
 
 type IndexData struct {
@@ -67,6 +69,19 @@ func main() {
 		"templates/partials/layout_styles.html.tmpl",
 		"templates/partials/header.html.tmpl",
 		"templates/partials/footer.html.tmpl",
+		"templates/partials/gtag.html.tmpl",
+	}
+
+	gtagID := gtagIDFromEnv()
+	page := func(activeNav, search, searchParam, sortKey string) PageData {
+		return PageData{
+			BaseURL:     baseURL,
+			ActiveNav:   activeNav,
+			Search:      search,
+			SearchParam: searchParam,
+			Sort:        sortKey,
+			GtagID:      gtagID,
+		}
 	}
 
 	tmplRobots, err := template.ParseFiles("templates/robots.txt.tmpl")
@@ -112,7 +127,7 @@ func main() {
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := tmplIndex.Execute(w, IndexData{
-			PageData: PageData{BaseURL: baseURL, ActiveNav: "home", Search: search, SearchParam: searchParam, Sort: sortKey},
+			PageData: page("home", search, searchParam, sortKey),
 			Beasts:   items,
 		}); err != nil {
 			log.Printf("executing index template: %v", err)
@@ -133,7 +148,7 @@ func main() {
 		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := tmplBeast.Execute(w, BeastDetailData{
-			PageData: PageData{BaseURL: baseURL, ActiveNav: "home", Sort: "asc"},
+			PageData: page("home", "", "", "asc"),
 			Beast:    beast,
 		}); err != nil {
 			log.Printf("executing beast template: %v", err)
@@ -184,6 +199,14 @@ func main() {
 	}
 	fmt.Printf("Serving at http://localhost:%s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func gtagIDFromEnv() string {
+	id := strings.TrimSpace(os.Getenv("GTAG_ID"))
+	if gtagIDRe.MatchString(id) {
+		return id
+	}
+	return ""
 }
 
 func beastsJSONPath() string {
