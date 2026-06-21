@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.*.example
+
+# go build output (accidental local compile)
+src/fantasticbeastsandwheretofindthem.xyz

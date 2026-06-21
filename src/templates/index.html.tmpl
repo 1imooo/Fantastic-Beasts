@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <meta name="description" content="Explore the magical world of Fantastic Beasts and discover detailed information about magical creatures.">
+    <meta name="keywords" content="Fantastic Beasts, magical creatures, wizarding world, Ministry of Magic classification">
+    <meta name="author" content="Timo Hoyland">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .BaseURL }}/">
+    <meta property="og:title" content="Fantastic Beasts and Where to Find Them">
+    <meta property="og:description" content="Explore the magical world of Fantastic Beasts and discover detailed information about magical creatures.">
+    <meta property="og:locale" content="en_GB">
+    <meta property="og:site_name" content="Fantastic Beasts">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Fantastic Beasts and Where to Find Them">
+    <meta name="twitter:description" content="Explore the magical world of Fantastic Beasts and discover detailed information about magical creatures.">
+
+    <title>Fantastic Beasts and Where to Find Them</title>
+    <link rel="canonical" href="{{ .BaseURL }}/">
+
+    {{ template "layout-styles" . }}
+</head>
+
+<body>
+    {{ template "header" . }}
+
+    <main role="main" id="main-content">
+        {{ range .Beasts }}
+        <article aria-labelledby="beast-{{ .Slug }}-title">
+            <hr aria-hidden="true">
+            <h2 id="beast-{{ .Slug }}-title">{{ .Name }}</h2>
+            <p class="beast-classification {{ .ClassCSS }}">{{ .ClassLabel }}</p>
+            <p>{{ truncate .Description 240 }}</p>
+            <a href="/beasts/{{ .Slug }}" aria-label="Read more: {{ .Name }}">Read more</a>
+        </article>
+        {{ end }}
+    </main>
+
+    {{ template "footer" . }}
+</body>
+</html>

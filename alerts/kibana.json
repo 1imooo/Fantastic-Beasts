@@ -1,0 +1,48 @@
+[
+  {
+    "id": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "name": "fantastic-beasts HTTP 5xx spike",
+    "tags": ["fantastic-beasts", "access"],
+    "rule_type_id": ".es-query",
+    "consumer": "stackAlerts",
+    "schedule": { "interval": "1m" },
+    "enabled": true,
+    "notify_when": "onActionGroupChange",
+    "params": {
+      "searchType": "esQuery",
+      "index": ["logstash-*"],
+      "timeField": "@timestamp",
+      "esQuery": "{\"query\":{\"query_string\":{\"query\":\"container.name: *fantastic-beasts* AND message: *\\\" 5\\\"\"}}}",
+      "threshold": [10],
+      "thresholdComparator": ">",
+      "timeWindowSize": 15,
+      "timeWindowUnit": "m",
+      "size": 100,
+      "groupBy": "all"
+    },
+    "actions": []
+  },
+  {
+    "id": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "name": "fantastic-beasts no access logs",
+    "tags": ["fantastic-beasts", "access"],
+    "rule_type_id": ".es-query",
+    "consumer": "stackAlerts",
+    "schedule": { "interval": "5m" },
+    "enabled": true,
+    "notify_when": "onActionGroupChange",
+    "params": {
+      "searchType": "esQuery",
+      "index": ["logstash-*"],
+      "timeField": "@timestamp",
+      "esQuery": "{\"query\":{\"query_string\":{\"query\":\"container.name: *fantastic-beasts*\"}}}",
+      "threshold": [1],
+      "thresholdComparator": "<",
+      "timeWindowSize": 20,
+      "timeWindowUnit": "m",
+      "size": 100,
+      "groupBy": "all"
+    },
+    "actions": []
+  }
+]

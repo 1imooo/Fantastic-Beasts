@@ -1,0 +1,18 @@
+# Test deploy compose — CI exports IMAGE, CONTAINER_NAME, PROJECT_NAME, ports from docs/project.yml.
+
+services:
+  @PROJECT@:
+    image: ${IMAGE}
+    container_name: ${CONTAINER_NAME}
+    ports:
+      - "${HOST_PORT}:${CONTAINER_PORT}"
+    networks:
+      - mono
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+networks:
+  mono:
+    external: true
+    name: mono

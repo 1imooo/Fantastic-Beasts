@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <meta name="description" content="{{ .Beast.Description }}">
+    <meta name="keywords" content="{{ .Beast.Name }}, Fantastic Beasts, magical creatures, Ministry of Magic classification">
+    <meta name="author" content="Timo Hoyland">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ .BaseURL }}/beasts/{{ .Beast.Slug }}">
+    <meta property="og:title" content="{{ .Beast.Name }} | Fantastic Beasts">
+    <meta property="og:description" content="{{ .Beast.Description }}">
+    <meta property="og:locale" content="en_GB">
+    <meta property="og:site_name" content="Fantastic Beasts">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ .Beast.Name }} | Fantastic Beasts">
+    <meta name="twitter:description" content="{{ .Beast.Description }}">
+
+    <title>{{ .Beast.Name }} | Fantastic Beasts</title>
+    <link rel="canonical" href="{{ .BaseURL }}/beasts/{{ .Beast.Slug }}">
+
+    {{ template "layout-styles" . }}
+    <style>
+        h2 {
+            margin: 1.5rem 0 0rem;
+        }
+
+        h3 {
+            margin: 1rem 0 0.5rem;
+        }
+
+        article > p {
+            margin: 1rem 0 1.5rem;
+        }
+
+    </style>
+</head>
+
+<body>
+    {{ template "header" . }}
+
+    <main role="main" id="main-content">
+        <article aria-labelledby="beast-title">
+            <hr aria-hidden="true">
+
+            <h2 id="beast-title">
+                {{ .Beast.Name }}
+            </h2>
+
+            <p class="beast-classification {{ .Beast.ClassCSS }}">
+                {{ .Beast.ClassLabel }}
+            </p>
+
+            <p>
+                {{ .Beast.Description }}
+            </p>
+
+            <p>
+                <a href="/" aria-label="Back to homepage">Back to home</a>
+            </p>
+        </article>
+    </main>
+
+    {{ template "footer" . }}
+</body>
+</html>

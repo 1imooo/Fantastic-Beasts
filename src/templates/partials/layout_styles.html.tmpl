@@ -1,0 +1,109 @@
+{{ define "layout-styles" }}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        padding: 1.5rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header,
+    main,
+    footer {
+        width: 100%;
+        max-width: 31.25rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    footer {
+        margin-top: 4rem;
+    }
+
+    h1,
+    h2,
+    a,
+    p,
+    li {
+        font-size: 0.78125rem;
+        line-height: 1.5625rem;
+        font-family: sans-serif;
+    }
+
+    h3 {
+        font-weight: 400;
+    }
+
+    h1 {
+        margin: 1rem 0 1.5rem;
+    }
+
+    nav {
+        display: flex;
+        column-gap: 0.75rem;
+        flex-wrap: wrap;
+        row-gap: 0.75rem;
+        align-items: center;
+    }
+
+    nav form {
+        display: flex;
+        column-gap: 0.75rem;
+        align-items: center;
+    }
+
+    nav input[type="search"],
+    nav button[type="submit"] {
+        padding: 1px 12px;
+        font-size: 0.78125rem;
+        line-height: 1.5625rem;
+        font-family: sans-serif;
+    }
+
+    hr {
+        margin: 2rem 0;
+    }
+
+    article > p,
+    .index-content p {
+        margin: 1rem 0 1.5rem;
+    }
+
+    footer > p {
+        margin: 1rem 0 0;
+    }
+
+    .index-content {
+        margin-bottom: 2rem;
+    }
+
+    .beast-classification {
+        margin-top: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .classification-x,
+    .classification-xx {
+        color: #4FB477;
+    }
+
+    .classification-xxx,
+    .classification-xxxx {
+        color: #FCA311;
+    }
+
+    .classification-xxxxx {
+        color: #FE4A49;
+    }
+</style>
+{{ end }}

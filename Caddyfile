@@ -1,0 +1,27 @@
+# fantastic-beasts — merge into mono host/caddy/Caddyfile (ports from docs/project.yml public.caddy).
+
+www.fantasticbeastsandwheretofindthem.xyz {
+	redir https://fantasticbeastsandwheretofindthem.xyz{uri} permanent
+}
+
+fantasticbeastsandwheretofindthem.xyz {
+	encode gzip zstd
+
+	reverse_proxy localhost:3017 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}
+
+test.fantasticbeastsandwheretofindthem.xyz {
+	encode gzip zstd
+
+	reverse_proxy localhost:3016 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

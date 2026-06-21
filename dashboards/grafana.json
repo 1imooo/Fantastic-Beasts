@@ -1,0 +1,99 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "mimir" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        {
+          "expr": "sum(increase(nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\",deployment_environment=~\"$environment\"}[$__range]))",
+          "legendFormat": "requests",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP requests (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "mimir" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        {
+          "expr": "sum(increase(nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\",status=~\"5..\",deployment_environment=~\"$environment\"}[$__range]))",
+          "legendFormat": "5xx",
+          "refId": "A"
+        }
+      ],
+      "title": "5xx responses (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "mimir" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "id": 3,
+      "options": { "legend": { "displayMode": "table", "placement": "right", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\",deployment_environment=~\"$environment\"}[5m]))",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Request rate by status",
+      "type": "timeseries"
+    },
+    {
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 12 },
+      "id": 4,
+      "options": {
+        "content": "### Apache access logs\n\nIf ingress metrics are unavailable, use **Kibana** → `fantastic-beasts-access` saved searches on `logstash-*` filtered by `container.name: *fantastic-beasts*`.",
+        "mode": "markdown"
+      },
+      "title": "Logs fallback",
+      "type": "text"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["fantastic-beasts"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": true, "text": "test|production", "value": "test|production" },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [
+          { "selected": true, "text": "test|production", "value": "test|production" },
+          { "selected": false, "text": "test", "value": "test" },
+          { "selected": false, "text": "production", "value": "production" }
+        ],
+        "query": "test,production",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "fantastic-beasts",
+  "uid": "fantastic-beasts",
+  "version": 1
+}

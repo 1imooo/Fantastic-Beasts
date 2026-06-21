@@ -1,0 +1,16 @@
+{{ define "header" }}
+<header role="banner">
+    <p>
+        A reference guide to magical creatures from the wizarding world.
+    </p>
+
+    <h1>Fantastic Beasts and Where to Find Them</h1>
+
+    <nav aria-label="Search and sort">
+        <a href="/?sort=asc{{ .SearchParam }}"{{ if eq .Sort "asc" }} aria-current="page"{{ end }}>A-Z</a>
+        <a href="/?sort=desc{{ .SearchParam }}"{{ if eq .Sort "desc" }} aria-current="page"{{ end }}>Z-A</a>
+        <a href="/?sort=1to5{{ .SearchParam }}"{{ if eq .Sort "1to5" }} aria-current="page"{{ end }}>1-5</a>
+        <a href="/?sort=5to1{{ .SearchParam }}"{{ if eq .Sort "5to1" }} aria-current="page"{{ end }}>5-1</a>
+    </nav>
+</header>
+{{ end }}

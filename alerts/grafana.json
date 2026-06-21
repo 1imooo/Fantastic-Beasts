@@ -1,0 +1,124 @@
+{
+  "folder": {
+    "uid": "fantastic-beasts",
+    "title": "fantastic-beasts"
+  },
+  "rules": [
+    {
+      "uid": "fb-http-5xx-high",
+      "title": "fantastic-beasts HTTP 5xx elevated",
+      "ruleGroup": "fantastic-beasts",
+      "folderUID": "fantastic-beasts",
+      "orgID": 1,
+      "condition": "C",
+      "for": "5m",
+      "noDataState": "OK",
+      "execErrState": "Alerting",
+      "annotations": {
+        "summary": "5xx response rate elevated",
+        "description": "nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\",status=~\"5..\"} rate > 0.1/s over 15m"
+      },
+      "labels": {
+        "service": "fantastic-beasts",
+        "severity": "warning"
+      },
+      "data": [
+        {
+          "refId": "A",
+          "relativeTimeRange": { "from": 900, "to": 0 },
+          "datasourceUid": "mimir",
+          "model": {
+            "expr": "sum(rate(nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\",status=~\"5..\"}[15m]))",
+            "refId": "A"
+          }
+        },
+        {
+          "refId": "B",
+          "datasourceUid": "__expr__",
+          "model": {
+            "type": "reduce",
+            "expression": "A",
+            "reducer": "last",
+            "refId": "B"
+          }
+        },
+        {
+          "refId": "C",
+          "datasourceUid": "__expr__",
+          "model": {
+            "type": "threshold",
+            "expression": "B",
+            "conditions": [
+              {
+                "evaluator": { "params": [0.1], "type": "gt" },
+                "operator": { "type": "and" },
+                "query": { "params": ["C"] },
+                "reducer": { "params": [], "type": "last" },
+                "type": "query"
+              }
+            ],
+            "refId": "C"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "fb-no-traffic",
+      "title": "fantastic-beasts no HTTP traffic",
+      "ruleGroup": "fantastic-beasts",
+      "folderUID": "fantastic-beasts",
+      "orgID": 1,
+      "condition": "C",
+      "for": "15m",
+      "noDataState": "Alerting",
+      "execErrState": "Alerting",
+      "annotations": {
+        "summary": "No HTTP traffic detected",
+        "description": "Zero nginx_ingress_controller_requests for fantastic-beasts over 15m — site may be down"
+      },
+      "labels": {
+        "service": "fantastic-beasts",
+        "severity": "critical"
+      },
+      "data": [
+        {
+          "refId": "A",
+          "relativeTimeRange": { "from": 900, "to": 0 },
+          "datasourceUid": "mimir",
+          "model": {
+            "expr": "sum(rate(nginx_ingress_controller_requests{service=~\"fantastic-beasts.*\"}[15m]))",
+            "refId": "A"
+          }
+        },
+        {
+          "refId": "B",
+          "datasourceUid": "__expr__",
+          "model": {
+            "type": "reduce",
+            "expression": "A",
+            "reducer": "last",
+            "refId": "B"
+          }
+        },
+        {
+          "refId": "C",
+          "datasourceUid": "__expr__",
+          "model": {
+            "type": "threshold",
+            "expression": "B",
+            "conditions": [
+              {
+                "evaluator": { "params": [0], "type": "lte" },
+                "operator": { "type": "and" },
+                "query": { "params": ["C"] },
+                "reducer": { "params": [], "type": "last" },
+                "type": "query"
+              }
+            ],
+            "refId": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

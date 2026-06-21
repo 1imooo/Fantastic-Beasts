@@ -1,21 +1,26 @@
-# Use official PHP Apache image
-FROM php:8.2-apache
+# Build stage
+FROM golang:1.25.11-alpine AS builder
 
-# Enable Apache modules commonly needed for PHP apps and allow .htaccess overrides
-RUN a2enmod rewrite headers expires \
-    && echo '<Directory /var/www/html>\n    AllowOverride All\n</Directory>' > /etc/apache2/conf-available/htaccess.conf \
-    && a2enconf htaccess
+WORKDIR /app
 
-# Set working directory
-WORKDIR /var/www/html
+COPY src/go.mod ./
+RUN go mod download 2>/dev/null || true
 
-# Copy project files into the container
-COPY . /var/www/html/
+COPY src/ ./
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o server .
 
-# Set proper permissions for Apache
-RUN chown -R www-data:www-data /var/www/html
+# Runtime stage
+FROM alpine:3.21
 
-# Expose Apache port
-EXPOSE 80
+RUN apk add --no-cache ca-certificates
 
-# Base image starts Apache by default
+WORKDIR /app
+
+COPY --from=builder /app/server .
+COPY --from=builder /app/templates ./templates
+COPY assets/ ./assets/
+
+ENV PORT=8080
+EXPOSE 8080
+
+CMD ["./server"]
